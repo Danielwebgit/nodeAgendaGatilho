@@ -93,3 +93,54 @@
           alarme <BR><INPUT type=file size=10 name=alarmSound> </FONT>
         </TR></TBODY></TABLE>
     <!----------termina aqui--------------->
+          
+          <!--##################################################################################-->
+          
+var Config = {
+    apiKey: "AIzaSyCahEwTx-OU5oVfbdwFnxBHemWw7YzU4y4",
+    authDomain: "conexao-e5e07.firebaseapp.com",
+    databaseURL: "https://conexao-e5e07.firebaseio.com",
+    projectId: "conexao-e5e07",
+    storageBucket: "conexao-e5e07.appspot.com",
+    messagingSenderId: "1041564260836",
+    appId: "1:1041564260836:web:5029e23b8f1e4fdc0b8ff1",
+    measurementId: "G-1PKPEWM4SQ"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(Config);
+
+  var ref = firebase.database().ref("lampada");
+        strLED1 = "";
+        strLED2 = "";
+        var LED2_state = 0;
+        function GetArduinoIO()
+        {
+            nocache = "&nocache=" + Math.random() * 1000000;
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function()
+            {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        if (this.responseXML != null) {
+                            // XML file received - contains analog values, switch values and LED states
+                            var count;
+                            // LED 1
+                            if (this.responseXML.getElementsByTagName('LED')[0].childNodes[0].nodeValue === "checked") {
+                                document.LED_form.LED1.checked = true;
+                            }
+                            else {
+                                document.LED_form.LED1.checked = false;
+                            }
+                            // LED 2
+                            if (this.responseXML.getElementsByTagName('LED')[1].childNodes[0].nodeValue === "on") {
+                                document.getElementById("LED2").innerHTML = "LED 2 is ON (D7)";
+                                LED2_state = 1;
+                            }
+                            else {
+                                document.getElementById("LED2").innerHTML = "LED 2 is OFF (D7)";
+                                LED2_state = 0;
+                            }
+                        }
+                    }
+                }
+            }
